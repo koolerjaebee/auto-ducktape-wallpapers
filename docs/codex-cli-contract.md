@@ -27,6 +27,18 @@ codex exec --json --sandbox workspace-write -
   "fallback": "disabled",
   "promptMode": "simple",
   "userInstruction": "월페이퍼용으로 다양한 귀여운 고양이 이미지를 만들어줘. 매번 다른 품종, 자세, 표정, 계절감, 배경 분위기가 나오게 하고, 너무 복잡하지 않은 깔끔한 desktop wallpaper 구도로 만들어줘.",
+  "randomPromptScript": {
+    "enabled": true,
+    "seed": "string",
+    "mode": "always_for_simple_prompts",
+    "selected": {
+      "contentTwist": "a tiny story implied by one object in the scene",
+      "composition": "wide negative space on one side for desktop icons",
+      "mood": "soft and heartwarming",
+      "surpriseDetail": "one tiny object that rewards a second look"
+    },
+    "script": "Intermediate random prompt script..."
+  },
   "promptVariation": {
     "enabled": true,
     "seed": "string",

@@ -28,6 +28,93 @@
     "localFitFallback": "allowed_for_canvas_conformance_only",
     "completionPriority": "apply_best_available_before_timeout"
   },
+  "simplePromptRandomization": {
+    "enabled": true,
+    "mode": "always_for_simple_prompts",
+    "direction": "Turn every short instruction into a fresh wallpaper concept with a random content twist, composition, scene logic, mood, palette, viewpoint, and one small surprise detail.",
+    "dimensions": {
+      "contentTwist": [
+        "a quiet everyday moment made visually special",
+        "a tiny story implied by one object in the scene",
+        "a seasonal variation that changes the emotional temperature",
+        "a playful contrast between subject and environment",
+        "a calm cinematic snapshot just before something cute happens",
+        "a cozy still-life arrangement around the main subject",
+        "a gentle magical-realism touch that stays subtle",
+        "a fresh editorial interpretation of the user's idea"
+      ],
+      "composition": [
+        "wide negative space on one side for desktop icons",
+        "lower-third subject placement with a calm open upper area",
+        "centered subject with soft breathing room around it",
+        "diagonal light or shadow leading toward the subject",
+        "minimal scene with a single clear focal point",
+        "foreground detail with spacious softly blurred background",
+        "symmetrical wallpaper layout with uncluttered edges",
+        "large clean background plane with subject offset to one third"
+      ],
+      "sceneLogic": [
+        "sunlit indoor corner",
+        "rainy window atmosphere",
+        "quiet evening outdoor nook",
+        "soft morning workspace",
+        "cozy blanket or fabric setting",
+        "minimal botanical environment",
+        "small seasonal prop scene",
+        "dreamlike but physically plausible space"
+      ],
+      "viewpoint": [
+        "eye-level intimate view",
+        "slightly low cinematic angle",
+        "soft top-down editorial view",
+        "gentle close-up with shallow depth",
+        "wide room-scale establishing view",
+        "over-the-shoulder environmental framing",
+        "macro foreground with clean distant background",
+        "calm straight-on poster-like framing"
+      ],
+      "mood": [
+        "soft and heartwarming",
+        "playfully curious",
+        "dreamy and calm",
+        "cozy and sleepy",
+        "bright and cheerful",
+        "quiet cinematic warmth",
+        "fresh morning optimism",
+        "gentle magical realism"
+      ],
+      "palette": [
+        "warm cream, pale apricot, soft sage",
+        "powder blue, cloud white, muted gold",
+        "lavender gray, pearl white, dusty pink",
+        "mint green, butter yellow, warm ivory",
+        "soft coral, sky blue, oatmeal beige",
+        "charcoal, moonlight blue, silver white",
+        "pale peach, moss green, linen white",
+        "rose beige, smoky gray, honey gold"
+      ],
+      "textureDetail": [
+        "soft fabric texture",
+        "subtle paper grain",
+        "gentle glass reflections",
+        "matte ceramic detail",
+        "soft fur or natural fiber detail",
+        "barely visible dust motes in light",
+        "smooth editorial background blur",
+        "fine botanical texture"
+      ],
+      "surpriseDetail": [
+        "one tiny object that rewards a second look",
+        "a small reflection that changes the scene",
+        "a barely visible rainbow highlight",
+        "a tiny prop related to the subject",
+        "a subtle shape made by light or shadow",
+        "one seasonal detail near the edge",
+        "a small cozy object in the far background",
+        "a playful detail that does not clutter the wallpaper"
+      ]
+    }
+  },
   "runtimeFallback": {
     "enabled": true,
     "onCodexFailure": "apply_latest_generated_desktop_candidate",

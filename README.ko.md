@@ -185,6 +185,16 @@ flowchart LR
     "onUpscaleFailure": "select_best_available_image_for_target",
     "completionPriority": "apply_best_available_before_timeout"
   },
+  "simplePromptRandomization": {
+    "enabled": true,
+    "mode": "always_for_simple_prompts",
+    "dimensions": {
+      "contentTwist": ["a tiny story implied by one object"],
+      "composition": ["wide negative space on one side for desktop icons"],
+      "mood": ["soft and heartwarming"],
+      "surpriseDetail": ["one tiny object that rewards a second look"]
+    }
+  },
   "runtimeFallback": {
     "enabled": true,
     "onCodexFailure": "apply_latest_generated_desktop_candidate",
@@ -235,6 +245,7 @@ flowchart LR
 - `naming.imageFilenamePattern`: timestamp가 포함된 바탕화면 파일명 패턴입니다.
 - `postProcessing.maxGptImage2UpscaleAttempts`: 해상도 보강 토큰 사용을 제한하는 횟수입니다. 기본 루틴은 `0`으로 두어 첫 usable 이미지를 바로 적용합니다.
 - `postProcessing.onUpscaleFailure`: 시도 제한 이후 fallback 동작입니다.
+- `simplePromptRandomization`: simple prompt가 이미지 프롬프트로 확장되기 전에 항상 실행되는 범용 랜덤 스크립트 생성기입니다.
 - `runtimeFallback`: Codex worker가 manifest 작성 전에 timeout되면, 이미 생성된 데스크톱 후보 이미지를 골라 적용하는 동작입니다.
 - `retention.olderThanDays`: 월 1회 휴지통 정리 대상 나이 기준입니다.
 - `mobileRelay`: 다른 네트워크의 Android 기기로 이미지를 전달하기 위한 DB 없는 암호화 relay 계획입니다.
@@ -343,6 +354,8 @@ Calm cute cat wallpaper for a morning desktop
 ```
 
 Codex가 이를 바탕화면용 이미지 프롬프트로 확장합니다.
+
+Codex가 지시문을 확장하기 전에 앱이 먼저 `randomPromptScript`를 만듭니다. 이 스크립트에는 랜덤한 내용, 구도, 장면, 분위기, 색감, 시점, surprise detail이 들어가며, 루틴별 `promptVariation` 슬롯이 있으면 함께 합쳐집니다.
 
 ### Advanced Mode
 

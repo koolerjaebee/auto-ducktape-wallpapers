@@ -58,6 +58,7 @@ function validateSettings(settings, resolvedPath) {
   }
 
   validateRoutineSchedule(settings.routines.demo.schedule, resolvedPath);
+  validateSimplePromptRandomization(settings.simplePromptRandomization, resolvedPath);
   validatePromptVariation(settings.routines.demo.promptVariation, resolvedPath);
   validateMobileRelay(settings.mobileRelay, resolvedPath);
   validateRuntimeFallback(settings.runtimeFallback, resolvedPath);
@@ -142,9 +143,37 @@ function validatePromptVariation(promptVariation, resolvedPath) {
     throw new Error(`settings.routines.demo.promptVariation.dimensions must be an object in ${resolvedPath}`);
   }
 
-  for (const [key, values] of Object.entries(promptVariation.dimensions)) {
+  validateDimensionMap(promptVariation.dimensions, "settings.routines.demo.promptVariation.dimensions", resolvedPath);
+}
+
+function validateSimplePromptRandomization(simplePromptRandomization, resolvedPath) {
+  if (simplePromptRandomization === undefined) {
+    return;
+  }
+
+  if (!simplePromptRandomization || typeof simplePromptRandomization !== "object") {
+    throw new Error(`settings.simplePromptRandomization must be an object in ${resolvedPath}`);
+  }
+
+  if (typeof simplePromptRandomization.enabled !== "boolean") {
+    throw new Error(`settings.simplePromptRandomization.enabled must be a boolean in ${resolvedPath}`);
+  }
+
+  if (simplePromptRandomization.dimensions === undefined) {
+    return;
+  }
+
+  if (!simplePromptRandomization.dimensions || typeof simplePromptRandomization.dimensions !== "object") {
+    throw new Error(`settings.simplePromptRandomization.dimensions must be an object in ${resolvedPath}`);
+  }
+
+  validateDimensionMap(simplePromptRandomization.dimensions, "settings.simplePromptRandomization.dimensions", resolvedPath);
+}
+
+function validateDimensionMap(dimensions, label, resolvedPath) {
+  for (const [key, values] of Object.entries(dimensions)) {
     if (!Array.isArray(values) || values.some((value) => typeof value !== "string" || value.length === 0)) {
-      throw new Error(`settings.routines.demo.promptVariation.dimensions.${key} must be a non-empty string array in ${resolvedPath}`);
+      throw new Error(`${label}.${key} must be a non-empty string array in ${resolvedPath}`);
     }
   }
 }
