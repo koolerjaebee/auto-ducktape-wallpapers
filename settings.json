@@ -17,8 +17,16 @@
     "currentWallpaperDirectory": ".runs/current"
   },
   "naming": {
-    "imageFilenamePattern": "{routineId}-{targetId}-{timestamp}.png",
-    "timestampFormat": "basic_utc"
+    "imageFilenamePattern": "{promptSlug}-{targetId}-{timestamp}.png",
+    "timestampFormat": "basic_utc",
+    "promptSlug": {
+      "enabled": true,
+      "source": "codex_final_prompt",
+      "style": "lowercase_ascii_kebab",
+      "maxWords": 6,
+      "maxLength": 64,
+      "fallback": "wallpaper"
+    }
   },
   "postProcessing": {
     "resolutionPolicy": "native_then_best_available_then_local_fit",
@@ -30,6 +38,7 @@
   },
   "simplePromptRandomization": {
     "enabled": true,
+    "generator": "codex",
     "mode": "always_for_simple_prompts",
     "direction": "Turn every short instruction into a fresh wallpaper concept with a random content twist, composition, scene logic, mood, palette, viewpoint, and one small surprise detail.",
     "dimensions": {
@@ -168,10 +177,37 @@
   },
   "routines": {
     "demo": {
-      "id": "demo-surprise-wallpapers",
-      "name": "Surprise Wallpapers",
+      "id": "demo-cute-cat-wallpapers",
+      "name": "Cute Cat Wallpapers",
       "promptMode": "simple",
-      "userInstruction": "매번 새롭고 기분 좋은 데스크톱 월페이퍼를 만들어줘. 너무 복잡하지 않은 깔끔한 구도, 아이콘이 잘 보이는 여백, 부드러운 색감, 텍스트와 로고 없는 이미지를 원해.",
+      "userInstruction": "매번 새롭고 두근두근한 귀여운 고양이 데스크톱 월페이퍼를 만들어줘. 고양이의 자세, 장면, 구도, 소품, 분위기는 매번 다르게 확장하고, 아이콘이 잘 보이도록 넓은 여백이 있으며 텍스트와 로고는 없어야 해.",
+      "promptVariation": {
+        "enabled": true,
+        "direction": "Keep the subject as a cute cat while making each run feel visually different, surprising, and wallpaper-friendly.",
+        "dimensions": {
+          "catPose": [
+            "sleeping curled up peacefully",
+            "peeking from the edge of the frame",
+            "stretching lazily in soft light",
+            "sitting with a curious expression",
+            "nestled in a cozy blanket"
+          ],
+          "catSetting": [
+            "warm window nook",
+            "quiet garden step",
+            "minimal desk corner",
+            "soft bedroom morning scene",
+            "rainy window background"
+          ],
+          "catDetail": [
+            "tiny seasonal prop nearby",
+            "soft paw detail in the foreground",
+            "subtle rainbow reflection near the edge",
+            "small ceramic bowl or cup nearby",
+            "gentle botanical texture around the scene"
+          ]
+        }
+      },
       "schedule": {
         "kind": "interval",
         "everyMinutes": 10,

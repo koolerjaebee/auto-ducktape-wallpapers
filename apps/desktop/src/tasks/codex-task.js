@@ -2,11 +2,18 @@ import { randomInt, randomUUID } from "node:crypto";
 
 export function buildCodexTask({ routine, targets, output, settings, now = new Date() }) {
   const timestamp = toFilenameTimestamp(now);
-  const promptVariation = createPromptVariation(routine.promptVariation);
+  const randomizationGenerator = resolveRandomizationGenerator({
+    routine,
+    settings
+  });
+  const promptVariation = createPromptVariation(routine.promptVariation, {
+    selectLocally: randomizationGenerator !== "codex"
+  });
   const randomPromptScript = createRandomPromptScript({
     routine,
     settings,
-    promptVariation
+    promptVariation,
+    generator: randomizationGenerator
   });
 
   return {
@@ -24,8 +31,10 @@ export function buildCodexTask({ routine, targets, output, settings, now = new D
     naming: {
       imageFilenamePattern: settings.naming.imageFilenamePattern,
       timestamp,
+      promptSlug: settings.naming.promptSlug ?? defaultPromptSlugSettings(),
       example: renderFilename(settings.naming.imageFilenamePattern, {
         routineId: routine.id,
+        promptSlug: "{promptSlug}",
         targetId: "{targetId}",
         timestamp
       })
@@ -80,6 +89,13 @@ export function buildCodexPrompt(taskSpec) {
         format: "png"
       }
     ],
+    promptSlug: "string",
+    intermediateRandomization: {
+      generator: "codex",
+      seed: "string",
+      script: "string",
+      selected: {}
+    },
     warnings: []
   };
 
@@ -91,14 +107,21 @@ export function buildCodexPrompt(taskSpec) {
     "Only report generation failure when Codex image generation itself is unavailable or returns an error.",
     `Use ${taskSpec.imageModel} only. Do not fall back to any other image model.`,
     "Do not write code that calls the OpenAI API directly.",
-    "For simple promptMode, first use taskSpec.randomPromptScript.script as the intermediate randomization script, then expand userInstruction into a detailed image prompt from that script.",
+    "For simple promptMode, first write an intermediate randomization script yourself, then expand userInstruction into a detailed image prompt from that script.",
+    "If taskSpec.randomPromptScript.generator is \"codex\", use taskSpec.randomPromptScript.candidateDimensions and routineSpecificDimensions as creative menus; choose a coherent subset instead of copying every option.",
+    "If taskSpec.randomPromptScript.script is present, you may use it as a local seed, but still rewrite the intermediate randomization in your own words.",
+    "Record the intermediate randomization script and chosen slots in manifest.intermediateRandomization.",
     "For advanced promptMode, preserve the user's prompt intent and only adapt it for wallpaper constraints.",
-    "If taskSpec.randomPromptScript.enabled is true, the finalPrompt must clearly incorporate its selected composition, content, mood, palette, and surprise details.",
-    "If taskSpec.promptVariation.enabled is true, treat taskSpec.promptVariation.selected as strong creative direction for this run.",
+    "If taskSpec.randomPromptScript.enabled is true, the finalPrompt must clearly incorporate the selected composition, content, mood, palette, and surprise details.",
+    "If taskSpec.promptVariation.enabled is true, treat taskSpec.promptVariation.selected or dimensions as strong creative direction for this run.",
     "When generic randomPromptScript choices and routine-specific promptVariation choices overlap, blend them without contradiction and prioritize routine-specific subject choices.",
     "Make each recurring run feel meaningfully different from a previous run while preserving wallpaper usability.",
     "Create one image per target using the exact requested width and height when possible.",
-    "Name each output image with the provided naming.imageFilenamePattern and naming.timestamp.",
+    "After finalPrompt is written, create one promptSlug from the actual finalPrompt if naming.promptSlug.enabled is true.",
+    "The promptSlug must be lowercase ASCII kebab-case, filesystem-safe, short, descriptive, and derived from the visible wallpaper concept rather than the routine name.",
+    "Do not include target id, platform, resolution, timestamp, private data, or unsupported characters in promptSlug.",
+    "Name each output image with naming.imageFilenamePattern, naming.timestamp, targetId, and promptSlug when the pattern contains {promptSlug}.",
+    "Use the same promptSlug for all targets in one run.",
     "After each generation, inspect the actual image dimensions.",
     ...upscaleInstructions,
     "For recurring routines, prioritize writing usable outputs and a manifest before timeout over perfect target resolution.",
@@ -123,11 +146,36 @@ function toFilenameTimestamp(date) {
 function renderFilename(pattern, values) {
   return pattern
     .replaceAll("{routineId}", values.routineId)
+    .replaceAll("{promptSlug}", values.promptSlug)
     .replaceAll("{targetId}", values.targetId)
     .replaceAll("{timestamp}", values.timestamp);
 }
 
-function createPromptVariation(promptVariation) {
+function resolveRandomizationGenerator({ routine, settings }) {
+  if (routine.promptMode !== "simple") {
+    return "local";
+  }
+
+  const config = settings.simplePromptRandomization ?? {};
+  if (config.enabled === false) {
+    return "local";
+  }
+
+  return config.generator ?? "codex";
+}
+
+function defaultPromptSlugSettings() {
+  return {
+    enabled: false,
+    source: "routine_id",
+    style: "lowercase_ascii_kebab",
+    maxWords: 6,
+    maxLength: 64,
+    fallback: "wallpaper"
+  };
+}
+
+function createPromptVariation(promptVariation, { selectLocally = true } = {}) {
   if (!promptVariation?.enabled) {
     return {
       enabled: false
@@ -135,21 +183,23 @@ function createPromptVariation(promptVariation) {
   }
 
   const dimensions = promptVariation.dimensions ?? {};
-  const selected = Object.fromEntries(
-    Object.entries(dimensions)
-      .map(([key, values]) => [key, pickOne(values)])
-      .filter(([, value]) => value !== null)
-  );
+  const selected = selectLocally ? selectDimensions(dimensions) : undefined;
 
-  return {
+  const result = {
     enabled: true,
     seed: randomUUID(),
     direction: promptVariation.direction,
-    selected
+    dimensions
   };
+
+  if (selected !== undefined) {
+    result.selected = selected;
+  }
+
+  return result;
 }
 
-function createRandomPromptScript({ routine, settings, promptVariation }) {
+function createRandomPromptScript({ routine, settings, promptVariation, generator }) {
   if (routine.promptMode !== "simple") {
     return {
       enabled: false,
@@ -158,6 +208,8 @@ function createRandomPromptScript({ routine, settings, promptVariation }) {
   }
 
   const config = settings.simplePromptRandomization ?? {};
+  const seed = randomUUID();
+
   if (config.enabled === false) {
     return {
       enabled: false,
@@ -165,15 +217,33 @@ function createRandomPromptScript({ routine, settings, promptVariation }) {
     };
   }
 
+  if (generator === "codex") {
+    return {
+      enabled: true,
+      seed,
+      generator: "codex",
+      mode: config.mode ?? "codex_generated_for_simple_prompts",
+      direction: config.direction ?? "Create a varied wallpaper prompt from a short user instruction.",
+      candidateDimensions: config.dimensions ?? {},
+      routineSpecificDimensions: promptVariation.enabled ? promptVariation.dimensions ?? {} : {},
+      instructions: [
+        "Write a fresh intermediate randomization script for this run.",
+        "Use the candidate dimensions as a creative menu, not a checklist.",
+        "Keep routine-specific subject choices coherent with the user's instruction.",
+        "Then turn the script into a concise final image prompt."
+      ]
+    };
+  }
+
   const selected = {
     ...selectDimensions(config.dimensions),
     routineSpecific: promptVariation.enabled ? promptVariation.selected : {}
   };
-  const seed = randomUUID();
 
   return {
     enabled: true,
     seed,
+    generator: "local",
     mode: config.mode ?? "always_for_simple_prompts",
     direction: config.direction ?? "Create a varied wallpaper prompt from a short user instruction.",
     selected,

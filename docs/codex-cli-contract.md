@@ -30,14 +30,16 @@ codex exec --json --sandbox workspace-write -
   "randomPromptScript": {
     "enabled": true,
     "seed": "string",
+    "generator": "codex",
     "mode": "always_for_simple_prompts",
-    "selected": {
-      "contentTwist": "a tiny story implied by one object in the scene",
-      "composition": "wide negative space on one side for desktop icons",
-      "mood": "soft and heartwarming",
-      "surpriseDetail": "one tiny object that rewards a second look"
+    "candidateDimensions": {
+      "contentTwist": ["a tiny story implied by one object in the scene"],
+      "composition": ["wide negative space on one side for desktop icons"],
+      "mood": ["soft and heartwarming"],
+      "surpriseDetail": ["one tiny object that rewards a second look"]
     },
-    "script": "Intermediate random prompt script..."
+    "routineSpecificDimensions": {},
+    "instructions": ["Write a fresh intermediate randomization script for this run."]
   },
   "promptVariation": {
     "enabled": false
@@ -47,8 +49,16 @@ codex exec --json --sandbox workspace-write -
     "filenameTimestamp": "20260504T061930Z"
   },
   "naming": {
-    "imageFilenamePattern": "{routineId}-{targetId}-{timestamp}.png",
-    "timestamp": "20260504T061930Z"
+    "imageFilenamePattern": "{promptSlug}-{targetId}-{timestamp}.png",
+    "timestamp": "20260504T061930Z",
+    "promptSlug": {
+      "enabled": true,
+      "source": "codex_final_prompt",
+      "style": "lowercase_ascii_kebab",
+      "maxWords": 6,
+      "maxLength": 64,
+      "fallback": "wallpaper"
+    }
   },
   "postProcessing": {
     "resolutionPolicy": "native_then_best_available_then_local_fit",

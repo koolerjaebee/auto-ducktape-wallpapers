@@ -58,10 +58,45 @@ function validateSettings(settings, resolvedPath) {
   }
 
   validateRoutineSchedule(settings.routines.demo.schedule, resolvedPath);
+  validateNaming(settings.naming, resolvedPath);
   validateSimplePromptRandomization(settings.simplePromptRandomization, resolvedPath);
   validatePromptVariation(settings.routines.demo.promptVariation, resolvedPath);
   validateMobileRelay(settings.mobileRelay, resolvedPath);
   validateRuntimeFallback(settings.runtimeFallback, resolvedPath);
+}
+
+function validateNaming(naming, resolvedPath) {
+  if (!naming || typeof naming !== "object") {
+    throw new Error(`settings.naming must be an object in ${resolvedPath}`);
+  }
+
+  if (typeof naming.imageFilenamePattern !== "string" || naming.imageFilenamePattern.length === 0) {
+    throw new Error(`settings.naming.imageFilenamePattern must be a non-empty string in ${resolvedPath}`);
+  }
+
+  if (naming.promptSlug === undefined) {
+    return;
+  }
+
+  if (!naming.promptSlug || typeof naming.promptSlug !== "object") {
+    throw new Error(`settings.naming.promptSlug must be an object in ${resolvedPath}`);
+  }
+
+  if (typeof naming.promptSlug.enabled !== "boolean") {
+    throw new Error(`settings.naming.promptSlug.enabled must be a boolean in ${resolvedPath}`);
+  }
+
+  if (!Number.isInteger(naming.promptSlug.maxWords) || naming.promptSlug.maxWords < 1) {
+    throw new Error(`settings.naming.promptSlug.maxWords must be a positive integer in ${resolvedPath}`);
+  }
+
+  if (!Number.isInteger(naming.promptSlug.maxLength) || naming.promptSlug.maxLength < 1) {
+    throw new Error(`settings.naming.promptSlug.maxLength must be a positive integer in ${resolvedPath}`);
+  }
+
+  if (typeof naming.promptSlug.fallback !== "string" || naming.promptSlug.fallback.length === 0) {
+    throw new Error(`settings.naming.promptSlug.fallback must be a non-empty string in ${resolvedPath}`);
+  }
 }
 
 function validateRoutineSchedule(schedule, resolvedPath) {
@@ -157,6 +192,12 @@ function validateSimplePromptRandomization(simplePromptRandomization, resolvedPa
 
   if (typeof simplePromptRandomization.enabled !== "boolean") {
     throw new Error(`settings.simplePromptRandomization.enabled must be a boolean in ${resolvedPath}`);
+  }
+
+  if (simplePromptRandomization.generator !== undefined &&
+    simplePromptRandomization.generator !== "codex" &&
+    simplePromptRandomization.generator !== "local") {
+    throw new Error(`settings.simplePromptRandomization.generator must be codex or local in ${resolvedPath}`);
   }
 
   if (simplePromptRandomization.dimensions === undefined) {

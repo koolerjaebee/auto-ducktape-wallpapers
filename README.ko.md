@@ -187,6 +187,7 @@ flowchart LR
   },
   "simplePromptRandomization": {
     "enabled": true,
+    "generator": "codex",
     "mode": "always_for_simple_prompts",
     "dimensions": {
       "contentTwist": ["a tiny story implied by one object"],
@@ -233,15 +234,15 @@ flowchart LR
 - `codex.args`: wrapper가 사용할 정확한 `codex exec` 호출 인자입니다.
 - `codex.timeoutSeconds`: Codex 생성 pass 하나를 기다리는 최대 시간입니다.
 - `output.directory`: 생성 파일을 둘 runtime output 경로입니다.
-- `naming.imageFilenamePattern`: timestamp가 포함된 바탕화면 파일명 패턴입니다.
+- `naming.imageFilenamePattern`: 바탕화면 파일명 패턴입니다. `{promptSlug}`를 넣으면 Codex가 final prompt에서 짧은 이름을 만들고, 앱은 `{targetId}`와 `{timestamp}`로 추적 가능성을 유지합니다.
 - `postProcessing.maxGptImage2UpscaleAttempts`: 해상도 보강 토큰 사용을 제한하는 횟수입니다. 기본 루틴은 `0`으로 두어 첫 usable 이미지를 바로 적용합니다.
 - `postProcessing.onUpscaleFailure`: 시도 제한 이후 fallback 동작입니다.
-- `simplePromptRandomization`: simple prompt가 이미지 프롬프트로 확장되기 전에 항상 실행되는 범용 랜덤 스크립트 생성기입니다.
+- `simplePromptRandomization`: simple prompt 확장 전에 Codex가 중간 랜덤 스크립트를 직접 작성할 때 사용하는 후보 메뉴와 가드레일입니다.
 - `runtimeFallback`: Codex worker가 manifest 작성 전에 timeout되면, 이미 생성된 데스크톱 후보 이미지를 골라 적용하는 동작입니다.
 - `retention.olderThanDays`: 월 1회 휴지통 정리 대상 나이 기준입니다.
 - `mobileRelay`: 다른 네트워크의 Android 기기로 이미지를 전달하기 위한 DB 없는 암호화 relay 계획입니다.
 - `routines.demo`: `npm run demo:task`가 사용하는 기본 데모 루틴이며, 현재 테스트용 10분 interval로 설정되어 있습니다.
-- `routines.demo.promptVariation`: 매 실행마다 랜덤으로 선택되는 창작 슬롯입니다. 반복 루틴이 비슷한 장면으로 수렴하지 않도록 합니다.
+- `routines.demo.promptVariation`: 반복 루틴이 비슷한 장면으로 수렴하지 않도록 Codex가 참고하는 루틴별 창작 슬롯입니다.
 - `routines.demo.schedule.runOnlyWhenComputerAwake`: scheduler 의도를 명시하는 설정입니다. macOS LaunchAgent는 Mac이 켜져 있고 깨어 있으며 사용자 세션이 있을 때만 실행되고, 컴퓨터를 깨우지 않습니다.
 
 `scheduler:run`은 foreground process입니다. 테스트 중에는 터미널을 열어둬야 하며, 터미널을 닫으면 10분 루틴도 멈춥니다.
@@ -344,9 +345,7 @@ Relay는 의도적으로 DB를 쓰지 않습니다.
 Calm cozy wallpaper for a focused morning desktop
 ```
 
-Codex가 이를 바탕화면용 이미지 프롬프트로 확장합니다.
-
-Codex가 지시문을 확장하기 전에 앱이 먼저 `randomPromptScript`를 만듭니다. 이 스크립트에는 랜덤한 내용, 구도, 장면, 분위기, 색감, 시점, surprise detail이 들어가며, 루틴별 `promptVariation` 슬롯이 있으면 함께 합쳐집니다.
+Codex는 `simplePromptRandomization`과 루틴별 `promptVariation` 슬롯을 참고해 먼저 중간 랜덤 스크립트를 직접 작성한 뒤, 짧은 지시사항을 바탕화면용 이미지 프롬프트로 확장합니다. prompt slug 파일명이 켜져 있으면 Codex가 final prompt에서 파일명 slug도 만듭니다.
 
 ### Advanced Mode
 

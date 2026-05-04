@@ -157,7 +157,7 @@ flowchart LR
 매일 아침 집중 잘 되는 차분한 배경
 ```
 
-앱은 이 문장을 보존하되, 먼저 `simplePromptRandomization` 설정으로 중간 `randomPromptScript`를 만든다. 이 스크립트에는 실행마다 달라지는 내용, 구도, 장면, 분위기, 색감, 시점, surprise detail이 들어간다. Codex는 원래 지시사항과 이 랜덤 스크립트를 함께 사용해 이미지 생성용 상세 프롬프트를 작성한다.
+앱은 이 문장을 보존하고 `simplePromptRandomization` 후보 메뉴와 루틴별 `promptVariation` 슬롯을 Codex에 넘긴다. Codex는 이 정보를 바탕으로 중간 랜덤 스크립트를 직접 작성하고, 원래 지시사항과 함께 이미지 생성용 상세 프롬프트를 만든다. 파일명에 `{promptSlug}`가 있으면 Codex는 final prompt에서 안전한 짧은 slug도 생성한다.
 
 ### Advanced Mode
 

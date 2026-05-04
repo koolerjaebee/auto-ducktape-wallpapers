@@ -461,8 +461,10 @@ function createFallbackManifest({ settings, task, target, outputPath, cwd, candi
 }
 
 function renderOutputFilename(task, target) {
+  const promptSlug = task.naming.promptSlug?.fallback ?? task.routine.id;
   return task.naming.imageFilenamePattern
     .replaceAll("{routineId}", task.routine.id)
+    .replaceAll("{promptSlug}", promptSlug)
     .replaceAll("{targetId}", target.id)
     .replaceAll("{timestamp}", task.naming.timestamp);
 }
