@@ -86,6 +86,9 @@ export function buildCodexPrompt(taskSpec) {
   return [
     "You are running inside Codex as the wallpaper generation worker.",
     "Generate wallpaper images through Codex image generation capabilities only.",
+    "Use the authenticated Codex session's built-in image generation capability; do not require OPENAI_API_KEY.",
+    "Never treat a missing OPENAI_API_KEY as a blocker because this app intentionally uses ChatGPT/Codex auth instead of API keys.",
+    "Only report generation failure when Codex image generation itself is unavailable or returns an error.",
     `Use ${taskSpec.imageModel} only. Do not fall back to any other image model.`,
     "Do not write code that calls the OpenAI API directly.",
     "For simple promptMode, first use taskSpec.randomPromptScript.script as the intermediate randomization script, then expand userInstruction into a detailed image prompt from that script.",
