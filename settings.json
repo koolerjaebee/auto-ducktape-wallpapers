@@ -85,6 +85,90 @@
       "name": "Cute Cat Wallpapers",
       "promptMode": "simple",
       "userInstruction": "월페이퍼용으로 다양한 귀여운 고양이 이미지를 만들어줘. 매번 다른 품종, 자세, 표정, 계절감, 배경 분위기가 나오게 하고, 너무 복잡하지 않은 깔끔한 desktop wallpaper 구도로 만들어줘. 텍스트, 로고, 워터마크는 넣지 말고, 화면 아이콘이 잘 보이도록 여백과 부드러운 색감을 유지해줘.",
+      "promptVariation": {
+        "enabled": true,
+        "direction": "Make every scheduled run feel like a small surprise: clearly different cat, setting, palette, and composition while staying clean and icon-friendly.",
+        "dimensions": {
+          "catBreed": [
+            "round British Shorthair",
+            "tiny Munchkin",
+            "fluffy Ragdoll",
+            "orange tabby kitten",
+            "silver Scottish Fold",
+            "cream Maine Coon kitten",
+            "black tuxedo cat",
+            "calico kitten",
+            "white Turkish Angora",
+            "gray Russian Blue"
+          ],
+          "pose": [
+            "loaf pose",
+            "sleepy stretch",
+            "curious head tilt",
+            "paw reaching toward light",
+            "sitting in a tiny basket",
+            "peeking from behind a soft blanket",
+            "rolling on its back",
+            "watching floating dust in sunlight",
+            "balanced on a windowsill",
+            "snuggled into a cushion"
+          ],
+          "setting": [
+            "sunlit minimalist studio",
+            "rainy window nook",
+            "quiet bookshop corner",
+            "spring flower balcony",
+            "cozy winter blanket scene",
+            "pastel kitchen morning",
+            "moonlit rooftop garden",
+            "soft beach picnic at sunrise",
+            "tiny greenhouse with warm glass reflections",
+            "calm tatami room with paper lantern glow"
+          ],
+          "mood": [
+            "soft and heartwarming",
+            "playfully curious",
+            "dreamy and calm",
+            "cozy and sleepy",
+            "bright and cheerful",
+            "gentle magical realism",
+            "quiet cinematic warmth",
+            "fresh morning optimism"
+          ],
+          "palette": [
+            "warm cream, pale apricot, soft sage",
+            "powder blue, cloud white, muted gold",
+            "lavender gray, pearl white, dusty pink",
+            "mint green, butter yellow, warm ivory",
+            "soft coral, sky blue, oatmeal beige",
+            "charcoal, moonlight blue, silver white",
+            "pale peach, moss green, linen white",
+            "rose beige, smoky gray, honey gold"
+          ],
+          "composition": [
+            "wide negative space on the left for desktop icons",
+            "cat placed in the lower right third with calm open background",
+            "center subject with very soft blurred edges",
+            "low horizon and large clean sky or wall area",
+            "diagonal light beam leading toward the cat",
+            "symmetrical calm scene with uncluttered top half",
+            "macro cozy foreground with spacious background",
+            "editorial wallpaper layout with no busy detail near edges"
+          ],
+          "surpriseElement": [
+            "tiny floating dust motes",
+            "one small ribbon toy",
+            "subtle paw-print shaped light",
+            "a tiny ceramic fish dish",
+            "soft falling petals",
+            "gentle steam from a mug far in the background",
+            "a small paper star garland",
+            "one round cushion shaped like a cloud",
+            "a miniature knitted scarf",
+            "a barely visible rainbow reflection"
+          ]
+        }
+      },
       "schedule": {
         "kind": "interval",
         "everyMinutes": 10,

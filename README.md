@@ -207,6 +207,15 @@ Most POC behavior is controlled from [settings.json](settings.json).
     "demo": {
       "name": "Cute Cat Wallpapers",
       "userInstruction": "Generate varied cute cat wallpapers with different breeds, poses, expressions, seasons, and soft uncluttered desktop-friendly backgrounds.",
+      "promptVariation": {
+        "enabled": true,
+        "direction": "Make every scheduled run feel like a small surprise.",
+        "dimensions": {
+          "catBreed": ["British Shorthair", "Maine Coon kitten"],
+          "setting": ["rainy window nook", "spring flower balcony"],
+          "palette": ["warm cream and soft sage", "powder blue and muted gold"]
+        }
+      },
       "schedule": {
         "kind": "interval",
         "everyMinutes": 10,
@@ -230,6 +239,7 @@ Important settings:
 - `retention.olderThanDays`: age threshold for monthly Trash/Recycling Bin cleanup.
 - `mobileRelay`: planned DB-less encrypted image relay for Android devices on other networks.
 - `routines.demo`: default demo routine used by `npm run demo:task`; currently set to a 10-minute interval for testing.
+- `routines.demo.promptVariation`: random creative slots that are selected on every run so recurring wallpapers do not collapse into the same scene.
 - `routines.demo.schedule.runOnlyWhenComputerAwake`: documents the intended scheduler behavior. The macOS LaunchAgent only runs while the Mac is awake and the user session is available; it does not wake the computer.
 
 `scheduler:run` is a foreground process. Keep the terminal open while testing; closing it stops the 10-minute routine.

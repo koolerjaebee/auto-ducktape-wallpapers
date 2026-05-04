@@ -58,6 +58,7 @@ function validateSettings(settings, resolvedPath) {
   }
 
   validateRoutineSchedule(settings.routines.demo.schedule, resolvedPath);
+  validatePromptVariation(settings.routines.demo.promptVariation, resolvedPath);
   validateMobileRelay(settings.mobileRelay, resolvedPath);
   validateRuntimeFallback(settings.runtimeFallback, resolvedPath);
 }
@@ -117,6 +118,34 @@ function validateMobileRelay(mobileRelay, resolvedPath) {
 
   if (mobileRelay.security.remoteCodexExecution !== "disabled") {
     throw new Error(`settings.mobileRelay.security.remoteCodexExecution must be disabled in ${resolvedPath}`);
+  }
+}
+
+function validatePromptVariation(promptVariation, resolvedPath) {
+  if (promptVariation === undefined) {
+    return;
+  }
+
+  if (!promptVariation || typeof promptVariation !== "object") {
+    throw new Error(`settings.routines.demo.promptVariation must be an object in ${resolvedPath}`);
+  }
+
+  if (typeof promptVariation.enabled !== "boolean") {
+    throw new Error(`settings.routines.demo.promptVariation.enabled must be a boolean in ${resolvedPath}`);
+  }
+
+  if (promptVariation.dimensions === undefined) {
+    return;
+  }
+
+  if (!promptVariation.dimensions || typeof promptVariation.dimensions !== "object") {
+    throw new Error(`settings.routines.demo.promptVariation.dimensions must be an object in ${resolvedPath}`);
+  }
+
+  for (const [key, values] of Object.entries(promptVariation.dimensions)) {
+    if (!Array.isArray(values) || values.some((value) => typeof value !== "string" || value.length === 0)) {
+      throw new Error(`settings.routines.demo.promptVariation.dimensions.${key} must be a non-empty string array in ${resolvedPath}`);
+    }
   }
 }
 

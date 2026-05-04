@@ -1,5 +1,8 @@
+import { randomInt, randomUUID } from "node:crypto";
+
 export function buildCodexTask({ routine, targets, output, settings, now = new Date() }) {
   const timestamp = toFilenameTimestamp(now);
+  const promptVariation = createPromptVariation(routine.promptVariation);
 
   return {
     task: "generate_and_prepare_wallpaper",
@@ -7,6 +10,7 @@ export function buildCodexTask({ routine, targets, output, settings, now = new D
     fallback: settings.codex.fallback,
     promptMode: routine.promptMode,
     userInstruction: routine.userInstruction,
+    promptVariation,
     run: {
       timestamp: now.toISOString(),
       filenameTimestamp: timestamp
@@ -80,6 +84,8 @@ export function buildCodexPrompt(taskSpec) {
     "Do not write code that calls the OpenAI API directly.",
     "For simple promptMode, expand userInstruction into a detailed image prompt.",
     "For advanced promptMode, preserve the user's prompt intent and only adapt it for wallpaper constraints.",
+    "If taskSpec.promptVariation.enabled is true, treat taskSpec.promptVariation.selected as strong creative direction for this run.",
+    "Make each recurring run feel meaningfully different from a previous run while preserving wallpaper usability.",
     "Create one image per target using the exact requested width and height when possible.",
     "Name each output image with the provided naming.imageFilenamePattern and naming.timestamp.",
     "After each generation, inspect the actual image dimensions.",
@@ -108,4 +114,34 @@ function renderFilename(pattern, values) {
     .replaceAll("{routineId}", values.routineId)
     .replaceAll("{targetId}", values.targetId)
     .replaceAll("{timestamp}", values.timestamp);
+}
+
+function createPromptVariation(promptVariation) {
+  if (!promptVariation?.enabled) {
+    return {
+      enabled: false
+    };
+  }
+
+  const dimensions = promptVariation.dimensions ?? {};
+  const selected = Object.fromEntries(
+    Object.entries(dimensions)
+      .map(([key, values]) => [key, pickOne(values)])
+      .filter(([, value]) => value !== null)
+  );
+
+  return {
+    enabled: true,
+    seed: randomUUID(),
+    direction: promptVariation.direction,
+    selected
+  };
+}
+
+function pickOne(values) {
+  if (!Array.isArray(values) || values.length === 0) {
+    return null;
+  }
+
+  return values[randomInt(values.length)];
 }

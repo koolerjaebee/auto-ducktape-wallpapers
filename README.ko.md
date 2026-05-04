@@ -207,6 +207,15 @@ flowchart LR
     "demo": {
       "name": "Cute Cat Wallpapers",
       "userInstruction": "Generate varied cute cat wallpapers with different breeds, poses, expressions, seasons, and soft uncluttered desktop-friendly backgrounds.",
+      "promptVariation": {
+        "enabled": true,
+        "direction": "Make every scheduled run feel like a small surprise.",
+        "dimensions": {
+          "catBreed": ["British Shorthair", "Maine Coon kitten"],
+          "setting": ["rainy window nook", "spring flower balcony"],
+          "palette": ["warm cream and soft sage", "powder blue and muted gold"]
+        }
+      },
       "schedule": {
         "kind": "interval",
         "everyMinutes": 10,
@@ -230,6 +239,7 @@ flowchart LR
 - `retention.olderThanDays`: 월 1회 휴지통 정리 대상 나이 기준입니다.
 - `mobileRelay`: 다른 네트워크의 Android 기기로 이미지를 전달하기 위한 DB 없는 암호화 relay 계획입니다.
 - `routines.demo`: `npm run demo:task`가 사용하는 기본 데모 루틴이며, 현재 테스트용 10분 interval로 설정되어 있습니다.
+- `routines.demo.promptVariation`: 매 실행마다 랜덤으로 선택되는 창작 슬롯입니다. 반복 루틴이 비슷한 장면으로 수렴하지 않도록 합니다.
 - `routines.demo.schedule.runOnlyWhenComputerAwake`: scheduler 의도를 명시하는 설정입니다. macOS LaunchAgent는 Mac이 켜져 있고 깨어 있으며 사용자 세션이 있을 때만 실행되고, 컴퓨터를 깨우지 않습니다.
 
 `scheduler:run`은 foreground process입니다. 테스트 중에는 터미널을 열어둬야 하며, 터미널을 닫으면 10분 루틴도 멈춥니다.
