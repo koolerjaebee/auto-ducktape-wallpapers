@@ -1,12 +1,17 @@
 {
-  "name": "@auto-ducktape/desktop",
+  "name": "@auto-ducktape/wallpapers-desktop",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Desktop orchestrator for Codex CLI wallpaper routines.",
+  "description": "Desktop orchestrator for Auto Ducktape Wallpapers routines.",
   "scripts": {
     "demo:task": "node src/index.js --demo-task",
-    "codex:dry-run": "node src/index.js --codex-dry-run"
+    "codex:dry-run": "node src/index.js --codex-dry-run",
+    "retention:dry-run": "node src/index.js --retention-plan",
+    "mobile-relay:dry-run": "node src/index.js --mobile-relay-plan",
+    "scheduler:plan": "node src/index.js --scheduler-plan",
+    "run-once": "node src/index.js --run-once",
+    "scheduler:run": "node src/index.js --scheduler-run"
   },
   "engines": {
     "node": ">=20"

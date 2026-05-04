@@ -1,0 +1,111 @@
+{
+  "app": {
+    "name": "auto-ducktape-wallpapers"
+  },
+  "codex": {
+    "command": "codex",
+    "args": ["exec", "--json", "--sandbox", "workspace-write", "-"],
+    "imageModel": "gpt-image-2",
+    "fallback": "disabled",
+    "directOpenAiApi": "disabled",
+    "timeoutSeconds": 600
+  },
+  "output": {
+    "directory": "./out",
+    "manifest": "./out/manifest.json",
+    "generatedImagesDirectory": ".runs",
+    "currentWallpaperDirectory": ".runs/current"
+  },
+  "naming": {
+    "imageFilenamePattern": "{routineId}-{targetId}-{timestamp}.png",
+    "timestampFormat": "basic_utc"
+  },
+  "postProcessing": {
+    "resolutionPolicy": "native_then_best_available_then_local_fit",
+    "maxGptImage2UpscaleAttempts": 0,
+    "onUpscaleFailure": "select_best_available_image_for_target",
+    "selectionCriteria": ["aspect_ratio", "pixel_area", "visual_suitability"],
+    "localFitFallback": "allowed_for_canvas_conformance_only",
+    "completionPriority": "apply_best_available_before_timeout"
+  },
+  "runtimeFallback": {
+    "enabled": true,
+    "onCodexFailure": "apply_latest_generated_desktop_candidate",
+    "generatedImagesRoot": "~/.codex/generated_images",
+    "candidateModifiedAfterRunStartGraceSeconds": 60,
+    "desktopAspectRatioTolerance": 0.15
+  },
+  "retention": {
+    "schedule": "monthly",
+    "olderThanDays": 30,
+    "action": "move_to_trash",
+    "scope": "generated_runtime_images",
+    "runAtUtc": "03:00",
+    "excludeCurrentWallpaper": true
+  },
+  "platformStrategies": {
+    "retention": {
+      "macos": "Finder move to trash or FileManager trashItem",
+      "windows": "Recycle Bin through native shell API",
+      "android": "not_applicable"
+    }
+  },
+  "mobileRelay": {
+    "enabled": false,
+    "status": "planned",
+    "mode": "ephemeral_object_relay",
+    "provider": "cloudflare_workers_r2",
+    "database": "disabled",
+    "metadataStorage": "encrypted_sidecar_object",
+    "imageRetentionHours": 24,
+    "maxImageBytes": 25000000,
+    "deleteAfterAck": true,
+    "objectNamespacePattern": "pairs/{pairHash}/devices/{deviceId}/jobs/{jobId}",
+    "pairing": {
+      "requireLocalQrPairing": true,
+      "allowRemotePairing": false,
+      "credential": "high_entropy_pair_token"
+    },
+    "security": {
+      "transportTls": "required",
+      "payloadEncryption": "end_to_end",
+      "relayCanReadImages": false,
+      "remoteCodexExecution": "disabled",
+      "maxClockSkewSeconds": 300,
+      "rateLimitPerPairPerMinute": 20
+    },
+    "androidDelivery": {
+      "mode": "pull_when_reachable",
+      "foregroundRealtimeSync": false
+    }
+  },
+  "routines": {
+    "demo": {
+      "id": "demo-cute-cat-wallpapers",
+      "name": "Cute Cat Wallpapers",
+      "promptMode": "simple",
+      "userInstruction": "월페이퍼용으로 다양한 귀여운 고양이 이미지를 만들어줘. 매번 다른 품종, 자세, 표정, 계절감, 배경 분위기가 나오게 하고, 너무 복잡하지 않은 깔끔한 desktop wallpaper 구도로 만들어줘. 텍스트, 로고, 워터마크는 넣지 말고, 화면 아이콘이 잘 보이도록 여백과 부드러운 색감을 유지해줘.",
+      "schedule": {
+        "kind": "interval",
+        "everyMinutes": 10,
+        "runOnlyWhenComputerAwake": true
+      },
+      "targets": [
+        {
+          "id": "main-monitor",
+          "kind": "desktop",
+          "platform": "auto",
+          "width": 3840,
+          "height": 2160,
+          "usage": "desktop_wallpaper"
+        },
+        {
+          "id": "galaxy-s24-ultra",
+          "kind": "phone-model",
+          "modelId": "samsung-galaxy-s24-ultra",
+          "usage": "phone_wallpaper"
+        }
+      ]
+    }
+  }
+}

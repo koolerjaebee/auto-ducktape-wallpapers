@@ -1,5 +1,5 @@
 {
-  "name": "auto-ducktape-desktop",
+  "name": "auto-ducktape-wallpapers",
   "version": "0.1.0",
   "private": true,
   "description": "Codex CLI wrapper for scheduled GPT Image 2 wallpapers.",
@@ -9,7 +9,15 @@
   ],
   "scripts": {
     "demo:task": "npm run demo:task -w apps/desktop",
-    "codex:dry-run": "npm run codex:dry-run -w apps/desktop"
+    "codex:dry-run": "npm run codex:dry-run -w apps/desktop",
+    "retention:dry-run": "npm run retention:dry-run -w apps/desktop",
+    "mobile-relay:dry-run": "npm run mobile-relay:dry-run -w apps/desktop",
+    "scheduler:plan": "npm run scheduler:plan -w apps/desktop",
+    "run-once": "npm run run-once -w apps/desktop",
+    "scheduler:run": "npm run scheduler:run -w apps/desktop",
+    "scheduler:install": "scripts/macos/install-launch-agent.sh",
+    "scheduler:uninstall": "scripts/macos/uninstall-launch-agent.sh",
+    "scheduler:status": "scripts/macos/status-launch-agent.sh"
   },
   "engines": {
     "node": ">=20"
