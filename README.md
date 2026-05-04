@@ -215,17 +215,8 @@ Most POC behavior is controlled from [settings.json](settings.json).
   },
   "routines": {
     "demo": {
-      "name": "Cute Cat Wallpapers",
-      "userInstruction": "Generate varied cute cat wallpapers with different breeds, poses, expressions, seasons, and soft uncluttered desktop-friendly backgrounds.",
-      "promptVariation": {
-        "enabled": true,
-        "direction": "Make every scheduled run feel like a small surprise.",
-        "dimensions": {
-          "catBreed": ["British Shorthair", "Maine Coon kitten"],
-          "setting": ["rainy window nook", "spring flower balcony"],
-          "palette": ["warm cream and soft sage", "powder blue and muted gold"]
-        }
-      },
+      "name": "Surprise Wallpapers",
+      "userInstruction": "Generate a fresh, pleasant desktop wallpaper with a clean composition, soft colors, and icon-friendly negative space.",
       "schedule": {
         "kind": "interval",
         "everyMinutes": 10,
@@ -350,7 +341,7 @@ Planned mobile flow:
 The user writes a short instruction:
 
 ```text
-Calm cute cat wallpaper for a morning desktop
+Calm cozy wallpaper for a focused morning desktop
 ```
 
 Codex expands this into a wallpaper-ready image prompt.

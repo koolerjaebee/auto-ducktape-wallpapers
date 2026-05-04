@@ -26,7 +26,7 @@ codex exec --json --sandbox workspace-write -
   "imageModel": "gpt-image-2",
   "fallback": "disabled",
   "promptMode": "simple",
-  "userInstruction": "월페이퍼용으로 다양한 귀여운 고양이 이미지를 만들어줘. 매번 다른 품종, 자세, 표정, 계절감, 배경 분위기가 나오게 하고, 너무 복잡하지 않은 깔끔한 desktop wallpaper 구도로 만들어줘.",
+  "userInstruction": "매번 새롭고 기분 좋은 데스크톱 월페이퍼를 만들어줘. 너무 복잡하지 않은 깔끔한 구도, 아이콘이 잘 보이는 여백, 부드러운 색감, 텍스트와 로고 없는 이미지를 원해.",
   "randomPromptScript": {
     "enabled": true,
     "seed": "string",
@@ -40,14 +40,7 @@ codex exec --json --sandbox workspace-write -
     "script": "Intermediate random prompt script..."
   },
   "promptVariation": {
-    "enabled": true,
-    "seed": "string",
-    "direction": "Make every scheduled run feel like a small surprise.",
-    "selected": {
-      "catBreed": "round British Shorthair",
-      "setting": "rainy window nook",
-      "palette": "powder blue, cloud white, muted gold"
-    }
+    "enabled": false
   },
   "run": {
     "timestamp": "2026-05-04T06:19:30.000Z",
