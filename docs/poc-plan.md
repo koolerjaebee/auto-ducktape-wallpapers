@@ -35,7 +35,7 @@
 
 ### 3단계: 바탕화면 적용
 
-- macOS: `NSWorkspace` 또는 AppleScript fallback 검토
+- macOS: `NSWorkspace` 기본 적용. AppleScript fallback은 macOS Automation 권한 팝업을 피하기 위해 명시적으로 켠 경우에만 사용
 - Windows: `IDesktopWallpaper` 우선, 단일 모니터 fallback 검토
 
 ### 4단계: 루틴화

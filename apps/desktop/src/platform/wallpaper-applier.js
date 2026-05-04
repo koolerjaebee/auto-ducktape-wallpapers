@@ -1,4 +1,10 @@
 import { spawn } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, "../../../..");
+const macosNativeWallpaperScript = path.join(repoRoot, "scripts/macos/set-wallpaper.swift");
 
 export function createApplyPlan({ platform, filePath }) {
   if (platform === "macos") {
@@ -55,12 +61,25 @@ export async function applyWallpaper({ platform, filePath }) {
 
 async function applyMacosWallpaper(filePath) {
   try {
-    await applyMacosWallpaperWithFinder(filePath);
-    return "osascript-finder";
-  } catch (error) {
-    await applyMacosWallpaperWithSystemEvents(filePath);
-    return "osascript-system-events";
+    await applyMacosWallpaperWithNSWorkspace(filePath);
+    return "nsworkspace-swift";
+  } catch (nativeError) {
+    if (process.env.AUTO_DUCKTAPE_ALLOW_OSASCRIPT_FALLBACK !== "1") {
+      throw nativeError;
+    }
+
+    try {
+      await applyMacosWallpaperWithFinder(filePath);
+      return "osascript-finder";
+    } catch {
+      await applyMacosWallpaperWithSystemEvents(filePath);
+      return "osascript-system-events";
+    }
   }
+}
+
+function applyMacosWallpaperWithNSWorkspace(filePath) {
+  return runProcess("swift", [macosNativeWallpaperScript, filePath], { timeoutMs: 45000 });
 }
 
 function applyMacosWallpaperWithFinder(filePath) {

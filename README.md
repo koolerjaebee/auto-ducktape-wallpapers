@@ -52,7 +52,8 @@ The desktop UI, native monitor detection, production Windows wallpaper applier, 
 For the current macOS POC:
 
 - `sips` is used for local image inspection/final canvas fitting.
-- `osascript` can be used as a temporary wallpaper application fallback.
+- `swift` is used for the macOS `NSWorkspace` wallpaper applier.
+- `osascript` is disabled by default and only used when `AUTO_DUCKTAPE_ALLOW_OSASCRIPT_FALLBACK=1` is set, because AppleScript control of Finder/System Events can trigger macOS Automation prompts.
 
 This project intentionally does not require `OPENAI_API_KEY`.
 

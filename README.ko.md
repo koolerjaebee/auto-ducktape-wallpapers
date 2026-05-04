@@ -52,7 +52,8 @@ Codex는 사용자 지시사항을 이미지 프롬프트로 바꾸고, `gpt-ima
 현재 macOS POC에서는 다음 도구도 사용합니다.
 
 - `sips`: 이미지 해상도 확인과 최종 캔버스 맞춤
-- `osascript`: 임시 바탕화면 적용 fallback
+- `swift`: macOS `NSWorkspace` 기반 바탕화면 적용
+- `osascript`: 기본값에서는 꺼져 있으며, `AUTO_DUCKTAPE_ALLOW_OSASCRIPT_FALLBACK=1`을 설정했을 때만 사용합니다. Finder/System Events를 AppleScript로 제어하면 macOS Automation 권한 팝업이 뜰 수 있기 때문입니다.
 
 이 프로젝트는 의도적으로 `OPENAI_API_KEY`를 요구하지 않습니다.
 
