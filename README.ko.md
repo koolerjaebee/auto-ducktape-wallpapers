@@ -252,6 +252,13 @@ macOS에서 백그라운드로 계속 돌리려면 `scheduler:install`을 사용
 
 이 방식은 user LaunchAgent라서 Mac이 켜져 있고 잠자기 상태가 아니며 사용자 세션이 살아 있을 때만 실행됩니다. 컴퓨터가 꺼져 있거나 잠자기 중일 때 놓친 실행을 cloud worker가 대신 만들지 않습니다.
 
+`runCleanup.deletePreviousMacosWallpaperCachesOnSuccess`가 켜져 있으면 macOS가 `node`의 wallpaper cache 접근 허용 여부를 물을 수 있습니다. 반복 팝업을 피하려면 LaunchAgent가 쓰는 Node 실행 파일에 Full Disk Access를 부여합니다.
+
+1. 시스템 설정 > 개인정보 보호 및 보안 > 전체 디스크 접근 권한을 엽니다.
+2. `+`를 누른 뒤 `Cmd+Shift+G`를 누릅니다.
+3. 실제 Node 경로를 추가합니다. 예: `/opt/homebrew/Cellar/node/25.9.0_1/bin/node`
+4. Homebrew로 Node가 업데이트되어 Cellar 경로가 바뀌면 새 경로를 다시 추가합니다.
+
 다른 설정 파일을 지정할 수도 있습니다.
 
 ```bash
