@@ -240,6 +240,7 @@ flowchart LR
 - `simplePromptRandomization`: simple prompt 확장 전에 Codex가 중간 랜덤 스크립트를 직접 작성할 때 사용하는 후보 메뉴와 가드레일입니다.
 - `runtimeFallback`: Codex worker가 manifest 작성 전에 timeout되면, 이미 생성된 데스크톱 후보 이미지를 골라 적용하는 동작입니다.
 - `retention.olderThanDays`: 월 1회 휴지통 정리 대상 나이 기준입니다.
+- `runCleanup.keepPreviousRunCount`: 새 바탕화면 적용 후 보존할 이전 성공 루틴 주기 수입니다. `0`이면 현재 주기만 남기고, `20`이면 현재 주기에 더해 이전 20주기를 남깁니다.
 - `mobileRelay`: 다른 네트워크의 Android 기기로 이미지를 전달하기 위한 DB 없는 암호화 relay 계획입니다.
 - `routines.demo`: `npm run demo:task`가 사용하는 기본 데모 루틴이며, 현재 테스트용 10분 interval로 설정되어 있습니다.
 - `routines.demo.promptVariation`: 반복 루틴이 비슷한 장면으로 수렴하지 않도록 Codex가 참고하는 루틴별 창작 슬롯입니다.

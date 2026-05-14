@@ -139,6 +139,12 @@
     "runAtUtc": "03:00",
     "excludeCurrentWallpaper": true
   },
+  "runCleanup": {
+    "enabled": true,
+    "keepPreviousRunCount": 0,
+    "deletePreviousOutputsOnSuccess": true,
+    "deletePreviousMacosWallpaperCachesOnSuccess": true
+  },
   "platformStrategies": {
     "retention": {
       "macos": "Finder move to trash or FileManager trashItem",

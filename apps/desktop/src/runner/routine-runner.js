@@ -3,6 +3,7 @@ import path from "node:path";
 
 import { runCodexExec } from "../codex/codex-cli.js";
 import { resolveTargets } from "../devices/resolution-resolver.js";
+import { cleanupPreviousRunArtifacts } from "../maintenance/run-cleanup.js";
 import { applyWallpaper } from "../platform/wallpaper-applier.js";
 import { createDemoRoutine } from "../routines/demo-routine.js";
 import { buildCodexPrompt, buildCodexTask } from "../tasks/codex-task.js";
@@ -104,6 +105,15 @@ export async function runDemoRoutineOnce({
     }
 
     const applyResults = apply ? await applyDesktopOutputs({ cwd, task, manifest }) : [];
+    const cleanup = apply ? await cleanupAfterSuccessfulApply({
+      cwd,
+      settings,
+      startedAt: now,
+      manifest
+    }) : {
+      status: "skipped",
+      reason: "apply_disabled"
+    };
 
     return {
       status: "ok",
@@ -112,6 +122,7 @@ export async function runDemoRoutineOnce({
       manifestPath,
       outputs: manifest.outputs,
       applyResults,
+      cleanup,
       codex: {
         stdoutBytes: Buffer.byteLength(codexResult.stdout),
         stderrBytes: Buffer.byteLength(codexResult.stderr)
@@ -247,6 +258,27 @@ async function applyDesktopOutputs({ cwd, task, manifest }) {
   return results;
 }
 
+async function cleanupAfterSuccessfulApply({
+  cwd,
+  settings,
+  startedAt,
+  manifest
+}) {
+  try {
+    return await cleanupPreviousRunArtifacts({
+      cwd,
+      settings,
+      startedAt,
+      currentOutputPaths: manifest.outputs.map((output) => resolveOutputPath(cwd, output.path))
+    });
+  } catch (error) {
+    return {
+      status: "failed",
+      error: error instanceof Error ? error.message : String(error)
+    };
+  }
+}
+
 async function tryCodexGeneratedImageFallback({
   cwd,
   settings,
@@ -296,6 +328,15 @@ async function tryCodexGeneratedImageFallback({
   await fs.writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 
   const applyResults = apply ? await applyDesktopOutputs({ cwd, task, manifest }) : [];
+  const cleanup = apply ? await cleanupAfterSuccessfulApply({
+    cwd,
+    settings,
+    startedAt,
+    manifest
+  }) : {
+    status: "skipped",
+    reason: "apply_disabled"
+  };
 
   return {
     status: "ok",
@@ -304,6 +345,7 @@ async function tryCodexGeneratedImageFallback({
     manifestPath,
     outputs: manifest.outputs,
     applyResults,
+    cleanup,
     fallback: {
       status: "used",
       reason: "codex_worker_did_not_finish_manifest",

@@ -63,6 +63,7 @@ function validateSettings(settings, resolvedPath) {
   validatePromptVariation(settings.routines.demo.promptVariation, resolvedPath);
   validateMobileRelay(settings.mobileRelay, resolvedPath);
   validateRuntimeFallback(settings.runtimeFallback, resolvedPath);
+  validateRunCleanup(settings.runCleanup, resolvedPath);
 }
 
 function validateNaming(naming, resolvedPath) {
@@ -238,6 +239,42 @@ function validateRuntimeFallback(runtimeFallback, resolvedPath) {
 
   if (typeof runtimeFallback.desktopAspectRatioTolerance !== "number" || runtimeFallback.desktopAspectRatioTolerance <= 0) {
     throw new Error(`settings.runtimeFallback.desktopAspectRatioTolerance must be a positive number in ${resolvedPath}`);
+  }
+}
+
+function validateRunCleanup(runCleanup, resolvedPath) {
+  if (runCleanup === undefined) {
+    return;
+  }
+
+  if (!runCleanup || typeof runCleanup !== "object") {
+    throw new Error(`settings.runCleanup must be an object in ${resolvedPath}`);
+  }
+
+  const booleanKeys = [
+    "enabled",
+    "deletePreviousOutputsOnSuccess",
+    "deletePreviousMacosWallpaperCachesOnSuccess"
+  ];
+
+  for (const key of booleanKeys) {
+    if (runCleanup[key] !== undefined && typeof runCleanup[key] !== "boolean") {
+      throw new Error(`settings.runCleanup.${key} must be a boolean in ${resolvedPath}`);
+    }
+  }
+
+  if (runCleanup.keepPreviousRunCount !== undefined &&
+    (!Number.isInteger(runCleanup.keepPreviousRunCount) || runCleanup.keepPreviousRunCount < 0)) {
+    throw new Error(`settings.runCleanup.keepPreviousRunCount must be a non-negative integer in ${resolvedPath}`);
+  }
+
+  if (runCleanup.macosWallpaperCacheDirectories === undefined) {
+    return;
+  }
+
+  if (!Array.isArray(runCleanup.macosWallpaperCacheDirectories) ||
+    runCleanup.macosWallpaperCacheDirectories.some((entry) => typeof entry !== "string" || entry.length === 0)) {
+    throw new Error(`settings.runCleanup.macosWallpaperCacheDirectories must be a non-empty string array in ${resolvedPath}`);
   }
 }
 
